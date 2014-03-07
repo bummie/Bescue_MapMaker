@@ -48,7 +48,7 @@
 			<tbody>
 				<tr>
 					<td>
-						Type: <select id="obj_type" name="type_objekt" size="1" onchange="updateObject(-1)"><option selected="selected" value="player">Player</option><option value="spikes">Spikes</option><option value="ground">Ground</option><option value="spring">Spring</option><option value="goal">Goal</option><option value="coin">Coin</option></select>
+						Type: <select id="obj_type" name="type_objekt" size="1" onchange="updateObject(-1)"><option selected="selected" value="player">Player</option><option value="spikes">Spikes</option><option value="ground">Ground</option><option value="spring">Spring</option><option value="goal">Goal</option><option value="coin">Coin</option><option value="shield">Shield</option></select>
 					</td>
 					<td>
 						<b>ObjectID:</b> <select id="obj_id" name="type_objekt" size="1" onchange="updateObject(-2)" value="empty"></select>
@@ -177,11 +177,8 @@ function render()
 		string = "MOVE";
 	break;
 	case 1:
-		string = "SIZE";
-	  break;
-	 case 2:
 		string = "ROTATION";
-	 break;
+	  break;
 	default:
 		string = "EMPTY";
 	break;
@@ -598,11 +595,8 @@ addEventListener('keydown', function(e){
 					MODUS = 1;
 				break;
 				case 1:
-					MODUS = 2;
-				  break;
-				 case 2:
 					MODUS = 0;
-				 break;
+				  break;
 				default:
 					MODUS = 0;
 				break;
@@ -809,24 +803,6 @@ addEventListener('mousemove', function(e)
 						updateObject(-1);					
 					break;
 					case 1:
-						var objW = document.getElementById("obj_w");
-						var objH = document.getElementById("obj_h");
-						console.log(parseInt(objX.value) < mouseX);
-						if(parseInt(objX.value) < mouseX)
-						{
-							objW.value = Math.round(parseInt(objW.value) + 1);
-						}else{
-							objW.value = Math.round(parseInt(objW.value) - 1);
-						}
-						if(parseInt(objY.value) < mouseY)
-						{
-							objH.value = Math.round(parseInt(objH.value) - 1);
-						}else{
-							objH.value = Math.round(parseInt(objH.value) + 1);
-						}
-						updateObject(-1);					
-					break;
-					case 2:
 						var objAngle = document.getElementById("obj_angle");
 						if(parseInt(objX.value) < mouseX)
 						{
