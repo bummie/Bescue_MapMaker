@@ -3,15 +3,18 @@
 <head>
     <title>Bescue - Mapmaker</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    
+    <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <!-- Scripts -->
+	<script type="text/javascript" src="scripts/objekter.js"></script>
+	<script type="text/javascript" src="scripts/json.js"></script>
+
+	<script type="text/javascript" src="libs/jscolor.js"></script>
 </head>
 
 <body>
-
-	<!-- Scripts -->
-	<script type="text/javascript" src="scripts/objekter.js"></script>
-
-	<script type="text/javascript" src="libs/jscolor.js"></script>
 
 	<center>
 		Name:&nbsp;<input id="map_name" maxlength="30" name="name" type="text" />
@@ -28,13 +31,13 @@
 				<tbody>
 					<tr>
 						<td>
-								<h1>Map</h1><br>
-    							<div class="item">
-    							  <a href="javascript:bSave();" class="btn-grn">Save</a>
-    							<br><div id="download">&nbsp;</div>
-    							<br><br><br>
-    								<input type="file" id="files" type = "json" />
-    							</div>
+							<h1>Map</h1><br>
+    						<div class="item">
+    						  <a href="javascript:bSave();" class="btn-grn">Save</a>
+    						<br><div id="download">&nbsp;</div>
+    						<br><br><br>
+    							<input type="file" id="files" type = "json" />
+    						</div>
 						</td>
 						<td>
 							<h1>Object</h1><br>
@@ -47,46 +50,48 @@
 						<td>
 							<table border="0" cellpadding="1" cellspacing="0" style="width: 100%;">
 						</td>
-			<tbody>
-				<tr>
-					<td>
-						// Print objekter her
-						Type: <select id="obj_type" name="type_objekt" size="1" onchange="updateObject(-1)"><option selected="selected" value="player">Player</option><option value="spikes">Spikes</option><option value="ground">Ground</option><option value="spring">Spring</option><option value="goal">Goal</option><option value="coin">Coin</option><option value="shield">Shield</option><option value="box">Box</option></select>
-					</td>
-					<td>
-						<b>ObjectID:</b> <select id="obj_id" name="type_objekt" size="1" onchange="updateObject(-2)" value="empty"></select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<b>X:</b> <input id="obj_x" maxlength="20" name="pos_x" value="0" type="number" onchange="updateObject(-1)" />
-					</td>
-					<td>
-						<b>Y:</b> <input id="obj_y" maxlength="20" name="pos_y" value="0" type="number" onchange="updateObject(-1)" />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<b>Width:</b> <input id="obj_w"maxlength="20" name="width" min="0" value="100" type="number" onchange="updateObject(-1)" />
-					</td>
-					<td>
-						<b>Height:</b> <input id="obj_h" maxlength="20" name="height" min="0" value="100" type="number" onchange="updateObject(-1)" />				
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<b>Angle:</b> <input id="obj_angle" maxlength="20" name="angle" min="0" max="360" value="0" type="number" onchange="updateObject(-1)" />
-					</td>
-					<td>
-						<b>Power:</b> <input id="obj_power" maxlength="5" name="power" min="0" value="0" type="number" onchange="updateObject(-1)" />
-					</td>
-				</tr>
-				<tr>
-					<td><b>Colour:</b> <input id="obj_color" class="color" value="FFFFFF" onchange="updateObject(-1)"></td>
-					<td>Null</td>
-				</tr>
-			</tbody>
-		</table>
+								<tbody>
+									<tr>
+										<td>
+										<script>
+											//Print objektene
+											objekterListe();
+										</script>
+										</td>
+										<td>
+											<b>ObjectID:</b> <select id="obj_id" name="type_objekt" size="1" onchange="updateObject(-2)" value="empty"></select>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<b>X:</b> <input id="obj_x" maxlength="20" name="pos_x" value="0" type="number" onchange="updateObject(-1)" />
+										</td>
+										<td>
+											<b>Y:</b> <input id="obj_y" maxlength="20" name="pos_y" value="0" type="number" onchange="updateObject(-1)" />
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<b>Width:</b> <input id="obj_w"maxlength="20" name="width" min="0" value="100" type="number" onchange="updateObject(-1)" />
+										</td>
+										<td>
+											<b>Height:</b> <input id="obj_h" maxlength="20" name="height" min="0" value="100" type="number" onchange="updateObject(-1)" />				
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<b>Angle:</b> <input id="obj_angle" maxlength="20" name="angle" min="0" max="360" value="0" type="number" onchange="updateObject(-1)" />
+										</td>
+										<td>
+											<b>Power:</b> <input id="obj_power" maxlength="5" name="power" min="0" value="0" type="number" onchange="updateObject(-1)" />
+										</td>
+									</tr>
+									<tr>
+										<td><b>Colour:</b> <input id="obj_color" class="color" value="FFFFFF" onchange="updateObject(-1)"></td>
+										<td>Null</td>
+									</tr>
+								</tbody>
+							</table>
 						</td>
 					</tr>
 				</tbody>
@@ -102,6 +107,7 @@
 //  | )___) )| (____/\  \   /  /\____) |   | |   | (____/\| ) \ \__
 //  |/ \___/ (_______/   \_/   \_______)   )_(   (_______/|/   \__/.net
 //  Sebulus (C) 2014
+//  KB2102146757NO
 
 // Globale elementas
 var canv;
@@ -109,7 +115,6 @@ var gfx;
 var refreshRate = 1000 / 30;
 var Cam;
 var js = null;
-
 
 // Values
 var app_name = "Bescue_mapmaker";
@@ -122,9 +127,22 @@ var CANVAS_FOCUSED = false;
 
 var OBJ_DRAG = false;
 
+var PLY = new Image();
+
+// UI_ELEMENTS
+var objID = document.getElementById("obj_id");
+var objType = document.getElementById("obj_type");
+var objX = document.getElementById("obj_x");
+var objY = document.getElementById("obj_y");
+var objW = document.getElementById("obj_w");
+var objH = document.getElementById("obj_h");
+var objAngle = document.getElementById("obj_angle");
+var objPower = document.getElementById("obj_power");
+var objCol = document.getElementById("obj_color");
 
 // Tabeller
 var Objekter = new Array();
+var Bilder = new Array();
 
 function MapMaker()
 {
@@ -143,8 +161,18 @@ function init()
     console.info('['+ app_name +'] Dim: ( ' + canv.width + ', ' + canv.height +  ' )' );
     canv.height = window.innerHeight;
     canv.width = window.innerWidth;
-    //canv.addEventListener('keydown', keyPressed, true);
     console.info('['+ app_name +'] Dim: ( ' + canv.width + ', ' + canv.height +  ' )' );
+
+    for (var i = 0; i < OBJ_LISTE.length; i++) {
+    	if(OBJ_LISTE[i][1] != '')
+    	{
+    		Bilder[OBJ_LISTE[i][0].toLowerCase()] = new Image();
+    		Bilder[OBJ_LISTE[i][0].toLowerCase()].src = "assets/"+OBJ_LISTE[i][1];
+    	}else
+    	{
+    		Bilder[OBJ_LISTE[i][0].toLowerCase()] = '';
+    	}
+    };
 
     Cam = new Camera(-10, (canv.height * 0.9) - 10, canv.width, canv.height);
     js = new JSONHandler();
@@ -197,15 +225,6 @@ function bNew()
 {
 	if(Objekter != null)
 	{
-		var objID = document.getElementById("obj_id");
-		var objType = document.getElementById("obj_type");
-		var objX = document.getElementById("obj_x");
-		var objY = document.getElementById("obj_y");
-		var objW = document.getElementById("obj_w");
-		var objH = document.getElementById("obj_h");
-		var objAngle = document.getElementById("obj_angle");
-		var objPower = document.getElementById("obj_power");
-		var objCol = document.getElementById("obj_color");
 		var id = 0;
 		
 		if(Objekter.length == 0){id = 0;}else{id = Objekter.length;}
@@ -224,12 +243,11 @@ function bDelete()
 	var del = false;
 	if(Objekter != null)
 	{
-		var objID = document.getElementById("obj_id");
-
 		Objekter[objID.value] = null;
 		updateIdList();
 
-		for (var i = 0; i < Objekter.length; i++) {
+		for (var i = 0; i < Objekter.length; i++)
+		{
 			if(Objekter[i] == null)
 			{
 				del = true;
@@ -247,8 +265,7 @@ function updateIdList()
 {
 	if(Objekter != null && Objekter.length > 0)
 	{
-		var idSelection = document.getElementById("obj_id");
-		idSelection.innerHTML = "";
+		objID.innerHTML = "";
 		for(var i = 0; i < Objekter.length; i++)
 	 	{
 	 		if(Objekter[i] != null)
@@ -256,7 +273,7 @@ function updateIdList()
 				var el = document.createElement("option");
     			el.textContent = Objekter[i].id + "." + Objekter[i].type;
     			el.value = Objekter[i].id;
-    			idSelection.appendChild(el);
+    			objID.appendChild(el);
 			}
 		}
 	}
@@ -266,53 +283,43 @@ function updateObject(val)
 {
 	if(Objekter != null && Objekter.length > 0)
 	{
-		var id = document.getElementById("obj_id").value;
+		var id  = objID.value;
 		if(id != null && id >= 0)
 		{
 			if(val == -1)
 			{
-				var objID = document.getElementById("obj_id");
-				var objType = document.getElementById("obj_type");
-				var objX = document.getElementById("obj_x");
-				var objY = document.getElementById("obj_y");
-				var objW = document.getElementById("obj_w");
-				var objH = document.getElementById("obj_h");
-				var objAngle = document.getElementById("obj_angle");
-				var objPower = document.getElementById("obj_power");
-				var objCol = document.getElementById("obj_color");
-
-
+				// Elementvalues changed
 				Objekter[id].update(objType.value, objX.value, objY.value, objW.value, objH.value, objAngle.value, objPower.value, objCol.value);
 				ID_SELECTED = objID.value;
 			}else if(val == -2)
 			{
-				var id  = document.getElementById("obj_id").value;
-				document.getElementById("obj_type").value = Objekter[id].type;
-				document.getElementById("obj_x").value = Objekter[id].x;
-				document.getElementById("obj_y").value = -Objekter[id].y;
-				document.getElementById("obj_w").value = Objekter[id].width * BOX_WORLD;
-				document.getElementById("obj_h").value = Objekter[id].height * BOX_WORLD;
-				document.getElementById("obj_angle").value = 360 - Objekter[id].angle;
-				document.getElementById("obj_power").value = Objekter[id].power;
-				document.getElementById("obj_color").value = Objekter[id].color;
-
+				// New object selected from droplist
+				var id  = objID.value;
+				objType.value = Objekter[id].type;
+				objX.value = Objekter[id].x;
+				objY.value = -Objekter[id].y;
+				objW.value = Objekter[id].width * BOX_WORLD;
+				objH.value = Objekter[id].height * BOX_WORLD;
+				objAngle.value = 360 - Objekter[id].angle;
+				objPower.value = Objekter[id].power;
+				objCol.value = Objekter[id].color;
 
 				ID_SELECTED = id;
 
 			}else{
-				var id  = val;
-				document.getElementById("obj_id").value = id;
-				document.getElementById("obj_type").value = Objekter[id].type;
-				document.getElementById("obj_x").value = Objekter[id].x;
-				document.getElementById("obj_y").value = -Objekter[id].y;
-				document.getElementById("obj_w").value = Objekter[id].width * BOX_WORLD;
-				document.getElementById("obj_h").value = Objekter[id].height * BOX_WORLD;
-				document.getElementById("obj_angle").value = 360 - Objekter[id].angle;
-				document.getElementById("obj_power").value = Objekter[id].power;
-				document.getElementById("obj_color").value = Objekter[id].color;
 
+				// New object selected
+				objID.value = val;
+				objType.value = Objekter[val].type;
+				objX.value = Objekter[val].x;
+				objY.value = -Objekter[val].y;
+				objW.value = Objekter[val].width * BOX_WORLD;
+				objH.value = Objekter[val].height * BOX_WORLD;
+				objAngle.value = 360 - Objekter[val].angle;
+				objPower.value = Objekter[val].power;
+				objCol.value = Objekter[val].color;
 
-				ID_SELECTED = id;
+				ID_SELECTED = val;
 			}
 		}
 	}
@@ -326,24 +333,16 @@ function bSave()
 function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
 
-    // Loop through the FileList and render image files as thumbnails.
     for (var i = 0, f; f = files[i]; i++) {
-
-      // Only process image files.
       if (f.type.match('application/json')) {
         continue;
       }
-
       var reader = new FileReader();
-
-      // Closure to capture the file information.
       reader.onload = (function(theFile) {
         return function(e) {
          js.loadJSON(JSON.parse(this.result));
         };
       })(f);
-
-      // Read in the image file as a data URL.
       reader.readAsText(f);
     }
   }
@@ -357,7 +356,6 @@ function Camera(x, y, w, h)
 	this.zoom = 0.1;
 	this.width = w * this.zoom;
 	this.height = h * this.zoom;
-
 }
 
 Camera.prototype.setPos = function(x, y)
@@ -368,7 +366,6 @@ Camera.prototype.setPos = function(x, y)
 
 Camera.prototype.draw = function()
 {
-	
 	this.width *= this.zoom;
 	this.height *= this.zoom;
 
@@ -386,7 +383,6 @@ Camera.prototype.draw = function()
 
 function Object( id, type, x, y, w, h, angle, power, color)
 {
-
 	this.id = id;
 	this.type = type;
 	this.x = x;
@@ -408,7 +404,6 @@ Object.prototype.update = function(type, x, y, w, h, angle, power, color)
 	this.angle = (360 - angle);
 	this.power = power;
 	this.color = color;
-
 }
 
 Object.prototype.draw = function(c)
@@ -421,6 +416,7 @@ Object.prototype.draw = function(c)
 		var dWidth = this.width / c.zoom; 
 		var dHeight = -(this.height / c.zoom); 
 
+		//if(this.type == 'spring') dHeight = -((this.height * 2) / c.zoom); 
 		// Thank you "user1602942" at Stack_Overflow <3
 		//Convert degrees to radian 
 		var rad = this.angle * Math.PI / 180;
@@ -428,132 +424,36 @@ Object.prototype.draw = function(c)
     	gfx.translate(dX, dY);
     	gfx.rotate(rad);
     	
-    	if(ID_SELECTED == this.id){
-    		gfx.fillStyle = 'white';
-    	}else{
-    		gfx.fillStyle = 'black';
-    	}
+    	
 
-    	gfx.fillRect((dWidth  + 1)/ 2 * (-1), (dHeight + 1) / 2 * (-1), dWidth + 1, dHeight + 1);
-    	if(this.type == 'player')
-		{
-			gfx.fillStyle = 'orange';
-		}else if(this.type == 'spikes')
-		{
-			gfx.fillStyle = 'red';
-		}else if(this.type == 'spring')
-		{
-			gfx.fillStyle = 'blue';
-		}else if(this.type == 'goal')
-		{
-			gfx.fillStyle = 'green';
-		}else if(this.type == 'coin')
-		{
-			gfx.fillStyle = 'yellow';
-		}else if(this.type == 'ground')
-		{
+    	if(Bilder[this.type] != '')
+    	{
+    		gfx.drawImage(Bilder[this.type], dWidth / 2 * (-1), dHeight / 2 * (-1), dWidth, dHeight);
+    	}else
+    	{
 			gfx.fillStyle = this.color;
-		}else
-		{
-			gfx.fillStyle = 'white';
-		}
-    	gfx.fillRect(dWidth / 2 * (-1), dHeight / 2 * (-1), dWidth, dHeight);
-    	//malingen på toppen
-    	gfx.fillStyle = 'black';
-    	gfx.fillRect((dWidth / 2 * (-1)), (dHeight / 2 * (-1)), dWidth, (dHeight * 0.90));
+    		gfx.fillRect( dWidth / 2 * (-1), dHeight / 2 * (-1), dWidth, dHeight);
+    	}
+    	
     	//Reset the canvas  
     	gfx.rotate(rad * ( -1 ) );
     	gfx.translate(dX * (-1), dY * (-1));
     	//ObjectCords
-    	gfx.fillStyle = 'pink';
-    	gfx.fillRect(dX, dY, 2, 2);
+		if(ID_SELECTED == this.id){
+    		gfx.fillStyle = 'green';
+    	}else{
+    		gfx.fillStyle = 'white';
+    	}    	gfx.fillRect(dX, dY, 2, 2);
 
 
 	}
 }
-
-// Read and write to JSON :)
-function JSONHandler(){}
-
-JSONHandler.prototype.toJSON = function()
-{
-	if(Objekter != null && Objekter.length > 0)
-	{
-		var map_name = document.getElementById("map_name");
-		var map_creator = document.getElementById("map_creator");
-		var map_difficulty = document.getElementById("map_diff");
-		if(map_name.value != '' && map_creator.value != '' && map_difficulty != '')
-		{	
-			var mObjects = {};
-			mObjects['map_name'] = map_name.value;
-			mObjects['map_creator'] = map_creator.value;
-			mObjects['map_difficulty'] = map_difficulty.value;
-			mObjects['map_created'] = (new Date().getUTCDate() + "." + (new Date().getUTCMonth() + 1) + "." + new Date().getUTCFullYear());
-			mObjects['map_objects'] = []; 
-			for (var i = 0; i < Objekter.length; i++)
-			{
-				if(Objekter[i] != null)
-				{
-					var objs = {};
-					objs = Objekter[i];
-					mObjects['map_objects'].push(objs);
-				}
-			
-			};
-			var jsons = JSON.stringify(mObjects);
-			console.log(jsons);		
-
-			var blob = new Blob([jsons], {type: "application/json"});
-			var url  = URL.createObjectURL(blob);
-			console.log(url);
-			
-			var a = document.createElement('a');
-			a.download    = map_name.value + ".json";
-			a.href        = url;
-			a.textContent = "Download";
-			document.getElementById('download').replaceChild(a, document.getElementById('download').childNodes[0]);
-
-    		}else
-    		{
-    			alert("["+app_name+"]: Map information can not be null");
-    		}
-		
-    }
-    
-}
-
-JSONHandler.prototype.loadJSON = function(json)
-{
-	if(json != null)
-	{
-		Objekter = new Array();
-		var map_name = document.getElementById("map_name");
-		var map_creator = document.getElementById("map_creator");
-		var map_difficulty = document.getElementById("map_diff");
-		var objID = document.getElementById("obj_id");
-
-
-		map_name.value = json.map_name;
-		map_creator.value = json.map_creator;
-		map_difficulty.value = json.map_difficulty;
-
-		for (var i = 0; i < json.map_objects.length; i++) {
-			var ob = json.map_objects[i];
-			Objekter.push(new Object( i, ob.type, ob.x, -ob.y, ob.width * BOX_WORLD, ob.height * BOX_WORLD,  (360 - ob.angle), ob.power, ob.color));
-			objID.value = i;
-			ID_SELECTED = i;
-		};
-		updateIdList();
-	}
-}
-
-
 
 addEventListener('keydown', function(e){
 	if(CANVAS_FOCUSED)
 	{
 		var camMove = 15;
-		var objMove = 1	
+		var objMove = 2	
 		// Movement
 		//====================
 		//	THE W KEY
