@@ -7,9 +7,11 @@
 </head>
 
 <body>
-	<script type="text/javascript" src="libs/jscolor.js"></script>
 
-	
+	<!-- Scripts -->
+	<script type="text/javascript" src="scripts/objekter.js"></script>
+
+	<script type="text/javascript" src="libs/jscolor.js"></script>
 
 	<center>
 		Name:&nbsp;<input id="map_name" maxlength="30" name="name" type="text" />
@@ -48,6 +50,7 @@
 			<tbody>
 				<tr>
 					<td>
+						// Print objekter her
 						Type: <select id="obj_type" name="type_objekt" size="1" onchange="updateObject(-1)"><option selected="selected" value="player">Player</option><option value="spikes">Spikes</option><option value="ground">Ground</option><option value="spring">Spring</option><option value="goal">Goal</option><option value="coin">Coin</option><option value="shield">Shield</option><option value="box">Box</option></select>
 					</td>
 					<td>
