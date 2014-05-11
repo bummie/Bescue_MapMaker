@@ -10,6 +10,8 @@
     <!-- Scripts -->
 	<script type="text/javascript" src="scripts/objekter.js"></script>
 	<script type="text/javascript" src="scripts/json.js"></script>
+	<script type="text/javascript" src="scripts/camera.js"></script>
+	<script type="text/javascript" src="scripts/objekt.js"></script>
 
 	<script type="text/javascript" src="libs/jscolor.js"></script>
 </head>
@@ -127,8 +129,6 @@ var CANVAS_FOCUSED = false;
 
 var OBJ_DRAG = false;
 
-var PLY = new Image();
-
 // UI_ELEMENTS
 var objID = document.getElementById("obj_id");
 var objType = document.getElementById("obj_type");
@@ -195,8 +195,6 @@ function render()
     gfx.fillRect(0, 0, canv.width, canv.height);
     document.bgColor = "#FFFFFF";
 
-    Cam.draw();
-
     gfx.fillStyle = "white";
     gfx.fillRect(Cam.x, Cam.y, (10 * WORLD_BOX) / Cam.zoom, (10 * WORLD_BOX) / Cam.zoom);
 
@@ -216,8 +214,13 @@ function render()
 	}
 
     gfx.fillStyle = 'white';
-    gfx.fillText( " Cam_pos: " + Cam.x + ", " + Cam.y + " Modus: " +  string, 0, 10 );
-
+    gfx.fillText( " Cam_pos: " + Cam.x + ", " + Cam.y + " Modus: " +  string + " Zoom: " + Cam.zoom, 0, 10 );
+ 	
+ 	gfx.translate(canv.width/2, canv.height/2);
+ 	gfx.scale(Cam.zoom, Cam.zoom);
+ 	gfx.translate(0, 0);
+    Cam.draw();
+    gfx.scale(1, 1);
 }
 
 // Knapper
@@ -347,107 +350,6 @@ function handleFileSelect(evt) {
     }
   }
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
-
-// Objects
-function Camera(x, y, w, h)
-{
-	this.x = x;
-	this.y = -y;
-	this.zoom = 0.1;
-	this.width = w * this.zoom;
-	this.height = h * this.zoom;
-}
-
-Camera.prototype.setPos = function(x, y)
-{
-	this.x = x;
-	this.y = -y;
-}
-
-Camera.prototype.draw = function()
-{
-	this.width *= this.zoom;
-	this.height *= this.zoom;
-
-	if(Objekter != null && Objekter.length > 0)
-	{
-		for (var i = 0; i < Objekter.length; i++)
-		{
-			if(Objekter[i] != null)
-			{
-				Objekter[i].draw(this);
-			}
-		}
-	}
-}
-
-function Object( id, type, x, y, w, h, angle, power, color)
-{
-	this.id = id;
-	this.type = type;
-	this.x = x;
-	this.y = -y;
-	this.width = w * WORLD_BOX;
-	this.height = h * WORLD_BOX;
-	this.angle = (360 - angle);
-	this.power = power;
-	this.color = color;
-}
-
-Object.prototype.update = function(type, x, y, w, h, angle, power, color)
-{
-	this.type = type;
-	this.x = x;
-	this.y = -y;
-	this.width = w * WORLD_BOX;
-	this.height = h * WORLD_BOX;
-	this.angle = (360 - angle);
-	this.power = power;
-	this.color = color;
-}
-
-Object.prototype.draw = function(c)
-{
-	if(c != null)
-	{
-		var dX = this.x - c.x;
-		var dY = this.y - c.y;
-
-		var dWidth = this.width / c.zoom; 
-		var dHeight = -(this.height / c.zoom); 
-
-		//if(this.type == 'spring') dHeight = -((this.height * 2) / c.zoom); 
-		// Thank you "user1602942" at Stack_Overflow <3
-		//Convert degrees to radian 
-		var rad = this.angle * Math.PI / 180;
-    	//Set the origin to the center of the image
-    	gfx.translate(dX, dY);
-    	gfx.rotate(rad);
-    	
-    	
-
-    	if(Bilder[this.type] != '')
-    	{
-    		gfx.drawImage(Bilder[this.type], dWidth / 2 * (-1), dHeight / 2 * (-1), dWidth, dHeight);
-    	}else
-    	{
-			gfx.fillStyle = this.color;
-    		gfx.fillRect( dWidth / 2 * (-1), dHeight / 2 * (-1), dWidth, dHeight);
-    	}
-    	
-    	//Reset the canvas  
-    	gfx.rotate(rad * ( -1 ) );
-    	gfx.translate(dX * (-1), dY * (-1));
-    	//ObjectCords
-		if(ID_SELECTED == this.id){
-    		gfx.fillStyle = 'green';
-    	}else{
-    		gfx.fillStyle = 'white';
-    	}    	gfx.fillRect(dX, dY, 2, 2);
-
-
-	}
-}
 
 addEventListener('keydown', function(e){
 	if(CANVAS_FOCUSED)
@@ -633,6 +535,22 @@ addEventListener('keydown', function(e){
 		//	THE ESCAPE KEY
 		//====================
 	
+
+		//====================
+		//	THE Z KEY
+		//====================
+		if (e.keyCode == 90)
+		{
+			Cam.zoom = Cam.zoom + 0.01;
+		}
+		//====================
+		//	THE X KEY
+		//====================
+		if (e.keyCode == 88)
+		{
+			Cam.zoom = Cam.zoom - 0.01;
+		}
+
 	}
 
 	if (e.keyCode == 27) 
@@ -648,12 +566,14 @@ addEventListener('mousedown', function(e)
 	if(Objekter != null && Objekter.length > 0)
 	{
 		var bRect = canv.getBoundingClientRect();
-		mouseX = parseInt((e.clientX - bRect.left)*(canv.width/bRect.width)) + (Cam.x);
-		mouseY = (-((e.clientY - bRect.top)*(canv.height/bRect.height))) - (Cam.y);
 
 		meX = parseInt((e.clientX - bRect.left)*(canv.width/bRect.width));
 		meY = (((e.clientY - bRect.top)*(canv.height/bRect.height)));
-
+		
+		mouseX = meX + (Cam.x);
+		mouseY = (-(meY) - (Cam.y));
+		console.info("Mouse_clicked( "+mouseX+", "+mouseY+")");
+		
 		if(meY < canv.height && meY > 0)
 		{
 			if(meX < canv.width && meX > 0)
@@ -665,10 +585,10 @@ addEventListener('mousedown', function(e)
 				{
 					if(Objekter[i] != null)
 					{
-						var a = parseInt(Objekter[i].x) - (parseInt(Objekter[i].width) / Cam.zoom);
-						var b = -(parseInt(Objekter[i].y) + (parseInt(Objekter[i].height) / Cam.zoom));
-						var c = parseInt(Objekter[i].x) + (parseInt(Objekter[i].width) / Cam.zoom);
-						var d = -(parseInt(Objekter[i].y) - (parseInt(Objekter[i].height) / Cam.zoom));
+						var a = parseInt(Objekter[i].x) - (parseInt(Objekter[i].width));
+						var b = -(parseInt(Objekter[i].y) + (parseInt(Objekter[i].height)));
+						var c = parseInt(Objekter[i].x) + (parseInt(Objekter[i].width) );
+						var d = -(parseInt(Objekter[i].y) - (parseInt(Objekter[i].height)));
 						if(mouseX >= a && mouseX <= c)
 						{
 							if(mouseY >= b && mouseY <= d)
@@ -729,8 +649,6 @@ function clearCanvas()
 {
     canv.height = window.innerHeight * 0.90;
     canv.width = window.innerWidth * 0.90;
-    Cam.width = canv.width * Cam.zoom;
-	Cam.height = canv.height * Cam.zoom;
 }
 
 MapMaker();
