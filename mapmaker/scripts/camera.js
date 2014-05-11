@@ -2,7 +2,7 @@ function Camera(x, y, w, h)
 {
 	this.x = x;
 	this.y = -y;
-	this.zoom = .8;
+	this.zoom = 1;
 	this.width = w;
 	this.height = h;
 }

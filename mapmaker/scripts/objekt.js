@@ -59,7 +59,5 @@ Object.prototype.draw = function(c)
     		gfx.fillStyle = 'white';
     	}   
     	gfx.fillRect(dX, dY, 2, 2);
-
-
 	}
 }

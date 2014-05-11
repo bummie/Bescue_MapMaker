@@ -68,3 +68,21 @@ JSONHandler.prototype.loadJSON = function(json)
 		updateIdList();
 	}
 }
+
+function handleFileSelect(evt)
+{
+    var files = evt.target.files; // FileList object
+
+    for (var i = 0, f; f = files[i]; i++) {
+      if (f.type.match('application/json')) {
+        continue;
+      }
+      var reader = new FileReader();
+      reader.onload = (function(theFile) {
+        return function(e) {
+         js.loadJSON(JSON.parse(this.result));
+        };
+      })(f);
+      reader.readAsText(f);
+    }
+ }
