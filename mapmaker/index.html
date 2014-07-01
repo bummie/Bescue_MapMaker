@@ -179,7 +179,22 @@ function update()
     render();
 }
 
-function logic(){}
+function logic()
+{
+	sModus = "EMPTY";
+    switch(MODUS)
+	{
+	case 0:
+		sModus = "MOVE";
+	break;
+	case 1:
+		sModus = "ROTATION";
+	  break;
+	default:
+		sModus = "EMPTY";
+	break;
+	}
+}
 
 function render()
 {
@@ -190,24 +205,7 @@ function render()
 
     gfx.fillStyle = "white";
     gfx.fillRect(Cam.x, Cam.y, 10, 10);
-
-
-    var string = "EMPTY";
-    switch(MODUS)
-	{
-	case 0:
-		string = "MOVE";
-	break;
-	case 1:
-		string = "ROTATION";
-	  break;
-	default:
-		string = "EMPTY";
-	break;
-	}
-
-    gfx.fillStyle = 'white';
-    gfx.fillText( " Cam_pos: " + Cam.x + ", " + Cam.y + " Modus: " +  string + " Zoom: " + Cam.zoom, 0, 10 );
+    gfx.fillText( " Cam_pos: " + Cam.x + ", " + Cam.y + " Modus: " +  sModus + " Zoom: " + Cam.zoom, 0, 10 );
  	
  	//zoom();
  	gfx.scale(Cam.zoom, Cam.zoom); 
@@ -216,15 +214,19 @@ function render()
 
 function zoom()
 {
-	if(LAST_ZOOM != Cam.zoom)
+
+	gfx.translate(canv.width/2, canv.height/2);
+ 	gfx.scale(Cam.zoom, Cam.zoom);
+
+	/*if(LAST_ZOOM != Cam.zoom)
 	{
-		//gfx.translate(canv.width/2, canv.height/2);
+		gfx.translate(canv.width/2, canv.height/2);
  		gfx.scale(Cam.zoom, Cam.zoom);
  		LAST_ZOOM = Cam.zoom;
 	}else
 	{
 		//gfx.setTransform(1, 0, 0, 1, 0, 0);
-	}
+	}*/
 }
 
 // Knapper
@@ -266,6 +268,11 @@ function bDelete()
 		if(del == true)
 			Objekter = null;
 	}
+}
+
+function bSave()
+{
+	js.toJSON();
 }
 
 function updateIdList()
@@ -332,12 +339,6 @@ function updateObject(val)
 	}
 }
 
-function bSave()
-{
-	js.toJSON();
-}
-
-
 addEventListener('keydown', function(e){
 	if(CANVAS_FOCUSED)
 	{
@@ -402,11 +403,6 @@ addEventListener('keydown', function(e){
 		{
 			if(Objekter != null && Objekter.length > 0)
 			{
-				var objX = document.getElementById("obj_x");
-				var objY = document.getElementById("obj_y");
-				var objW = document.getElementById("obj_w");
-				var objH = document.getElementById("obj_h");
-				var objAngle = document.getElementById("obj_angle")	
 				switch(MODUS)
 				{
 					case 0:
@@ -430,11 +426,6 @@ addEventListener('keydown', function(e){
 		{
 			if(Objekter != null && Objekter.length > 0)
 			{
-				var objX = document.getElementById("obj_x");
-				var objY = document.getElementById("obj_y");
-				var objW = document.getElementById("obj_w");
-				var objH = document.getElementById("obj_h");
-				var objAngle = document.getElementById("obj_angle")	
 				switch(MODUS)
 				{
 					case 0:
@@ -458,11 +449,6 @@ addEventListener('keydown', function(e){
 		{
 			if(Objekter != null && Objekter.length > 0)
 			{
-				var objX = document.getElementById("obj_x");
-				var objY = document.getElementById("obj_y");
-				var objW = document.getElementById("obj_w");
-				var objH = document.getElementById("obj_h");
-				var objAngle = document.getElementById("obj_angle")	
 				switch(MODUS)
 				{
 					case 0:
@@ -486,11 +472,6 @@ addEventListener('keydown', function(e){
 		if (e.keyCode == 74) {
 			if(Objekter != null && Objekter.length > 0)
 			{
-				var objX = document.getElementById("obj_x");
-				var objY = document.getElementById("obj_y");
-				var objW = document.getElementById("obj_w");
-				var objH = document.getElementById("obj_h");
-				var objAngle = document.getElementById("obj_angle")	
 				switch(MODUS)
 				{
 					case 0:
@@ -532,6 +513,14 @@ addEventListener('keydown', function(e){
 		{
 			Cam.zoom = Cam.zoom - 0.01;
 		}
+		//====================
+		//	THE C KEY
+		//====================
+		if (e.keyCode == 67)
+		{
+			Cam.zoom = 1;
+		}
+
 
 	}
 
@@ -552,8 +541,8 @@ addEventListener('mousedown', function(e)
 		meX = parseInt((e.clientX - bRect.left)*(canv.width/bRect.width));
 		meY = (((e.clientY - bRect.top)*(canv.height/bRect.height)));
 		
-		mouseX = meX + (Cam.x / Cam.zoom);
-		mouseY = (-(meY) - (Cam.y / Cam.zoom));
+		mouseX = meX + (Cam.x);
+		mouseY = (-(meY) - (Cam.y));
 		console.info("Mouse_clicked( "+mouseX+", "+mouseY+")");
 		
 		if(meY < canv.height && meY > 0)
@@ -573,10 +562,22 @@ addEventListener('mousedown', function(e)
 						var c = parseInt(Objekter[i].x) + (parseInt(Objekter[i].width) / 0.1 );
 						var d = -(parseInt(Objekter[i].y) - (parseInt(Objekter[i].height)) / 0.1);
 						//console.info("abcd( "+ i + ": "+a+ " - " +b +", "+c+" - " +d+" )");
-
-						if(mouseX >= a && mouseX <= c)
+						if(Objekter[i].angle > 0 &&  Objekter[i].angle < 360 )
 						{
-							if(mouseY >= b && mouseY <= d)
+							var angle = Math.radians(360 - Objekter[i].angle);
+							var nX = ((mouseX * Math.cos(angle)) - (mouseY * Math.sin((angle))));
+							var nY = ((mouseY * Math.cos(angle)) + (mouseX * Math.sin((angle))));
+
+						}else{
+							var nX = mouseX;
+							var nY = mouseY;
+						}
+						
+
+						if(i==25){console.info(i + ": " + nX + ", " + nY);}
+						if(nX >= a && nX <= c)
+						{
+							if(nY >= b && nY <= d)
 							{
 								ID_SELECTED = Objekter[i].id;
 								updateObject(Objekter[i].id);
@@ -652,6 +653,16 @@ function lastBilder()
     	}
     };
 }
+
+// Converts from degrees to radians.
+Math.radians = function(degrees) {
+  return degrees * Math.PI / 180;
+};
+ 
+// Converts from radians to degrees.
+Math.degrees = function(radians) {
+  return radians * 180 / Math.PI;
+};
 
 MapMaker();
 </script>
